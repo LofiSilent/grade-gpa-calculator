@@ -7,7 +7,7 @@
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit && vite build",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
-    "build:pages": "tsc --noEmit && vite build --base ./ --outDir docs"
+    "build:pages": "tsc --noEmit && vite build --config vite.pages.config.ts"
   },
   "dependencies": {
     "react": "^19.0.0",
