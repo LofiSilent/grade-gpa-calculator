@@ -1,0 +1,4 @@
+{
+  "folders": [{ "path": "." }],
+  "settings": { "files.exclude": { "**/.sites-runtime": true }, "search.exclude": { "**/node_modules": true, "**/dist": true } }
+}
