@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f9f6" />
+    <meta
+      name="description"
+      content="A thoughtful, credit-weighted GPA calculator. Add your courses, keep your progress, and see your GPA update instantly."
+    />
+    <title>GPA Calculator · Grade</title>
+    <script>
+      try {
+        document.documentElement.dataset.theme =
+          localStorage.getItem("grade-theme") || "light";
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
