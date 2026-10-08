@@ -1,3 +1,4 @@
+
 import {
   createContext,
   useContext,
@@ -7,7 +8,6 @@ import {
 } from "react";
 import {
   loadLocale,
-  messages,
   translate,
   localizedDecimal,
   type Locale,
@@ -31,7 +31,6 @@ function useLanguageState() {
     t: (key: MessageKey, params?: Record<string, string | number>) =>
       translate(locale, key, params),
     decimal: (value: string) => localizedDecimal(value, locale),
-    exampleNames: messages[locale].exampleNames,
   };
 }
 const I18nContext = createContext<ReturnType<typeof useLanguageState> | null>(
