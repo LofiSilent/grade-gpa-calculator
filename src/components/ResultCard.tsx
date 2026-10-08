@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from "react";
 import { BookOpen, CheckCircle2, Sparkles } from "lucide-react";
 import { calculate } from "../gpa";
@@ -25,7 +26,7 @@ export function ResultCard({
       start = performance.now();
     let frame: number;
     const tick = (now: number) => {
-      const t = Math.min((now - start) / 450, 1);
+      const t = Math.max(0, Math.min((now - start) / 450, 1));
       const value = from + (to - from) * (1 - Math.pow(1 - t, 3));
       setAnimated(value);
       current.current = value;
