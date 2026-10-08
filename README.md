@@ -1,6 +1,7 @@
+
 # Grade · GPA Calculator
 
-A polished, multilingual GPA calculator for students. Enter courses, grade points, and credits to see your credit-weighted GPA update instantly.
+A polished, multilingual GPA calculator for students. Enter courses, final scores out of 100, and credits to see your credit-weighted GPA update instantly.
 
 **Languages:** English · Russian · Kazakh  
 **Stack:** React · TypeScript · Vite · Lucide
@@ -14,9 +15,9 @@ A polished, multilingual GPA calculator for students. Enter courses, grade point
 - Clear validation for missing or invalid values
 - Browser-local saving of courses, theme, and language
 - Accessible labels, keyboard navigation, and reduced-motion support
-- Grade reference table and a plain-language calculation explanation
+- 100-point grade conversion table and a plain-language calculation explanation
 
-Switching languages changes the interface without modifying your course names, grades, or credits. Loading an example uses course names in the selected language.
+Switching languages changes the interface without modifying your course names, grades, or credits. There are no preset courses or example templates.
 
 ## Getting started
 
@@ -52,17 +53,28 @@ The final result is rounded half-up to two decimal places. Fixed-point integer a
 
 The supplied reference document is a transcript rather than an official formula specification. This calculator uses the confirmed credit-weighted policy and includes graded practice as a regular course. Users should include only courses that their institution counts toward GPA.
 
-The transcript provides these letter-to-point pairs:
+## 100-point grade input
 
-| Grade | Points |
-| ----- | -----: |
-| A     |   4.00 |
-| A−    |   3.67 |
-| B+    |   3.33 |
-| B     |   3.00 |
-| B−    |   2.67 |
+Enter a **whole-number final course score from 0 to 100**. The app converts each score to GPA points before weighting it by credits. The mapping matches every score/GPA-point pair in the supplied Zhetysu transcript, including 79 → 2.67, 83 → 3.00, 88 → 3.33, 93 → 3.67, and 95 → 4.00. The complete table uses the [published reference scale](https://www.farabi.university/students/19?lang=en); the transcript itself contains course examples rather than every possible score.
 
-For other grades, choose **Other points** and enter the numeric value from your transcript. The calculator does not assume percentage conversion ranges, repeat-course policies, or failed-course exemptions. The 0–4 scale and two-decimal rounding are calculator settings rather than a claim about official university policy.
+| Score | Grade | GPA points |
+| ----- | ----- | ---------: |
+| 95–100 | A | 4.00 |
+| 90–94 | A− | 3.67 |
+| 85–89 | B+ | 3.33 |
+| 80–84 | B | 3.00 |
+| 75–79 | B− | 2.67 |
+| 70–74 | C+ | 2.33 |
+| 65–69 | C | 2.00 |
+| 60–64 | C− | 1.67 |
+| 55–59 | D+ | 1.33 |
+| 50–54 | D | 1.00 |
+| 25–49 | FX | 0.50 |
+| 0–24 | F | 0.00 |
+
+Scores are not divided by 25 and are not rounded before conversion. Include only GPA-bearing courses under your institution's policy. The app has no preset subjects or sample-loading button: a new calculation starts with one empty row.
+
+Scores use a new browser storage key so old 0–4 grade-point data cannot be mistaken for 0–100 scores. Existing legacy storage is left untouched, and the new form starts blank.
 
 Credit inputs support up to six decimal places, with a technical limit of 1,000,000 credits per course.
 
@@ -76,7 +88,7 @@ The regression fixtures reproduce the reference transcript:
 | Second semester, including practice |          108.00 |      32 | 3.38 |
 | Full academic year                  |          190.35 |      60 | 3.17 |
 
-The tests also cover decimal credits, rounding ties, invalid inputs, translation coverage, and consistent calculations across all three languages.
+The tests cover all 101 possible scores, every supplied transcript conversion pair, decimal credits, rounding ties, invalid inputs, and translation coverage across all three languages. The transcript fixtures use the actual 100-point scores and credit weights from the supplied document.
 
 ## Project structure
 
