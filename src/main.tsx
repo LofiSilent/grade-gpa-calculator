@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
@@ -19,9 +20,8 @@ import {
 import {
   calculate,
   emptyCourse,
-  exampleCourses,
   isActive,
-  KNOWN_GRADES,
+  GRADE_SCALE,
   type Course,
 } from "./gpa";
 import { loadCourses, STORAGE_KEY } from "./storage";
@@ -33,7 +33,7 @@ import { CourseRow } from "./components/CourseRow";
 import { ResultCard } from "./components/ResultCard";
 
 function App() {
-  const { locale, setLocale, t, decimal, exampleNames } = useI18n();
+  const { locale, setLocale, t, decimal } = useI18n();
   const [initial] = useState(loadCourses);
   const [courses, setCourses] = useState<Course[]>(initial.courses);
   const [theme, setTheme] = useState(() =>
@@ -82,14 +82,7 @@ function App() {
   };
   const reset = () => {
     setUndo({ courses: [...courses], message: "resetDone" });
-    setCourses([emptyCourse(), emptyCourse(), emptyCourse()]);
-  };
-  const loadExample = () => {
-    setUndo({
-      courses: [...courses],
-      message: "exampleDone",
-    });
-    setCourses(exampleCourses(exampleNames));
+    setCourses([emptyCourse()]);
   };
   return (
     <>
@@ -272,9 +265,7 @@ function App() {
           <span>
             <span className="live-dot" /> {t("instant")}
           </span>
-          <button className="text-button" onClick={loadExample}>
-            {t("example")} <ArrowUpRight size={14} />
-          </button>
+
         </div>
         <section className="how-section" id="how-it-works">
           <div className="how-header">
@@ -391,13 +382,15 @@ function App() {
         <table>
           <thead>
             <tr>
+              <th scope="col">{t("scoreLabel")}</th>
               <th scope="col">{t("letterGrade")}</th>
               <th scope="col">{t("gradePoints")}</th>
             </tr>
           </thead>
           <tbody>
-            {KNOWN_GRADES.map((g) => (
+            {GRADE_SCALE.map((g) => (
               <tr key={g.letter}>
+                <td>{g.min}–{g.max}</td>
                 <td>
                   <span className="grade-pill">{g.letter}</span>
                 </td>
@@ -408,7 +401,7 @@ function App() {
         </table>
         <div className="modal-note">
           <Info size={18} />
-          <p>{t("scaleNote")}</p>
+          <p>{t("scaleNote")} <a href="https://www.farabi.university/students/19?lang=en" target="_blank" rel="noreferrer">{t("scaleSource")}</a></p>
         </div>
         <button className="primary-button" onClick={() => setScaleOpen(false)}>
           {t("gotIt")} <Check size={16} />
