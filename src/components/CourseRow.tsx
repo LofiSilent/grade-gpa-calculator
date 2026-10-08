@@ -1,7 +1,8 @@
+
 import { useState } from "react";
 import { useI18n } from "../i18n";
-import { ChevronDown, Trash2 } from "lucide-react";
-import { errorsFor, KNOWN_GRADES, type Course } from "../gpa";
+import { Trash2 } from "lucide-react";
+import { errorsFor, gradeForScore, type Course } from "../gpa";
 
 export function CourseRow({
   course,
@@ -17,7 +18,8 @@ export function CourseRow({
   const { t, decimal } = useI18n();
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const errors = errorsFor(course);
-  const edit = (key: keyof Course, value: string | boolean) =>
+  const converted = gradeForScore(course.grade);
+  const edit = (key: keyof Course, value: string) =>
     onChange({ ...course, [key]: value });
   const error = (key: "name" | "grade" | "credits") =>
     touched[key] && errors[key];
@@ -53,54 +55,21 @@ export function CourseRow({
         <label className="sr-only" htmlFor={`grade-${course.id}`}>
           {t("gradeLabel", { n: index + 1 })}
         </label>
-        <div className="select-wrap">
-          <select
-            id={`grade-${course.id}`}
-            value={course.custom ? "custom" : course.grade}
-            onChange={(e) => {
-              setTouched((t) => ({ ...t, grade: false }));
-              onChange({
-                ...course,
-                custom: e.target.value === "custom",
-                grade: e.target.value === "custom" ? "" : e.target.value,
-              });
-            }}
-            onBlur={() => setTouched((t) => ({ ...t, grade: true }))}
-            aria-invalid={!!error("grade")}
-            aria-describedby={
-              error("grade") ? `grade-error-${course.id}` : undefined
-            }
-          >
-            <option value="">{t("selectGrade")}</option>
-            {KNOWN_GRADES.map((g) => (
-              <option key={g.letter} value={g.points}>
-                {g.letter} · {decimal(g.points)}
-              </option>
-            ))}
-            <option value="custom">{t("other")}</option>
-          </select>
-          <ChevronDown size={14} />
-        </div>
-        {course.custom && (
-          <>
-            <label className="sr-only" htmlFor={`points-${course.id}`}>
-              {t("pointsLabel", { n: index + 1 })}
-            </label>
-            <input
-              className="custom-points"
-              id={`points-${course.id}`}
-              inputMode="decimal"
-              placeholder={t("pointsPlaceholder")}
-              value={course.grade}
-              onChange={(e) => edit("grade", e.target.value.replace(",", "."))}
-              onBlur={() => setTouched((t) => ({ ...t, grade: true }))}
-              aria-invalid={!!error("grade")}
-              aria-describedby={
-                error("grade") ? `grade-error-${course.id}` : undefined
-              }
-            />
-          </>
-        )}
+        <input
+          id={`grade-${course.id}`}
+          inputMode="numeric"
+          placeholder="0–100"
+          value={course.grade}
+          maxLength={3}
+          onChange={(e) => edit("grade", e.target.value)}
+          onBlur={() => setTouched((t) => ({ ...t, grade: true }))}
+          aria-invalid={!!error("grade")}
+          aria-describedby={[`conversion-${course.id}`, error("grade") ? `grade-error-${course.id}` : ""].filter(Boolean).join(" ")}
+          autoComplete="off"
+        />
+        <small id={`conversion-${course.id}`} className="grade-conversion">
+          {converted ? `${converted.letter} · ${decimal(converted.points)} GPA` : t("scoreHint")}
+        </small>
         {error("grade") && (
           <small id={`grade-error-${course.id}`} className="field-error">
             {t(errors.grade!)}
