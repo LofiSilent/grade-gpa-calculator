@@ -1,10 +1,10 @@
 import { emptyCourse, type Course } from "./gpa";
-export const STORAGE_KEY = "grade-courses-v1";
+export const STORAGE_KEY = "grade-courses-v2-scores";
 export function loadCourses(): {
   courses: Course[];
   warning: "" | "storageRead" | "storageWrite";
 } {
-  const fallback = () => Array.from({ length: 3 }, emptyCourse);
+  const fallback = () => [emptyCourse()];
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return { courses: fallback(), warning: "" };
@@ -18,8 +18,7 @@ export function loadCourses(): {
           typeof c === "object" &&
           ["id", "name", "grade", "credits"].every(
             (k) => typeof c[k] === "string",
-          ) &&
-          typeof c.custom === "boolean",
+          ),
       ) ||
       new Set(value.map((c) => c.id)).size !== value.length
     )
